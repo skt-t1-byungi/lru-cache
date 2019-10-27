@@ -1,4 +1,4 @@
-type CacheElement<V> = {val: V; expire: number}
+type CacheElement<V> = {val: V; expire: number; ttl: number}
 type CacheMap<V> = Record<string, CacheElement<V>>
 
 export class LRUCache<V, K extends string> {
@@ -15,13 +15,27 @@ export class LRUCache<V, K extends string> {
 
     has (key: K) {
         const now = Date.now()
-        if (hasOwn(this._cache, key) && this._cache[key].expire > now) return true
-        if (hasOwn(this._oldCache, key) && this._cache[key].expire > now) return true
+        if (hasOwn(this._cache, key)) {
+            const el = this._cache[key]
+            if (el.expire > now) {
+                delete this._cache[key]
+                return false
+            }
+            return true
+        }
+        if (hasOwn(this._oldCache, key)) {
+            const el = this._oldCache[key]
+            if (el.expire > now) {
+                delete this._oldCache[key]
+                return false
+            }
+            return true
+        }
         return false
     }
 
     set (key: K, val: V, { ttl = this._ttl } = {}) {
-        const el = { val, expire: Date.now() + ttl }
+        const el = { val, ttl, expire: Date.now() + ttl }
         if (hasOwn(this._cache, key)) {
             this._cache[key] = el
         } else {
@@ -29,7 +43,7 @@ export class LRUCache<V, K extends string> {
         }
     }
 
-    _set (key: K, el: CacheElement<V>) {
+    private _set (key: K, el: CacheElement<V>) {
         this._cache[key] = el
         this._size++
         if (this._size >= this._max) {
@@ -42,7 +56,11 @@ export class LRUCache<V, K extends string> {
     get (key: K) {
         if (hasOwn(this._cache, key)) {
             const el = this._cache[key]
-            if (el.expire > Date.now()) return el.val
+            const now = Date.now()
+            if (el.expire > Date.now()) {
+                el.expire = now + el.ttl
+                return el.val
+            }
 
             delete this._cache[key]
             this._size--
@@ -53,7 +71,9 @@ export class LRUCache<V, K extends string> {
             const el = this._oldCache[key]
             delete this._oldCache[key]
 
-            if (el.expire > Date.now()) {
+            const now = Date.now()
+            if (el.expire > now) {
+                el.expire = now + el.ttl
                 this._set(key, el)
                 return el.val
             }

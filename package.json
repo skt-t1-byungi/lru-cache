@@ -1,12 +1,12 @@
 {
     "name": "@byungi/lru-cache",
-    "description": "Typed fast LRU cache",
+    "description": "Typed fast LRU cache for old browser.",
     "version": "0.0.0",
     "main": "index.js",
     "license": "MIT",
     "devDependencies": {
         "eslint": "^6.6.0",
-        "eslint-config-byungi": "^0.7.4",
+        "eslint-config-byungi": "^0.7.5",
         "typescript": "^3.6.4"
     },
     "eslintConfig": {
