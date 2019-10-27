@@ -1,11 +1,11 @@
-type CacheElement<V> = {val: V; expire: number; ttl: number}
-type CacheMap<V> = Record<string, CacheElement<V>>
+type CacheElement<T> = {val: T; expire: number; ttl: number}
+type CacheMap<T> = Record<string, CacheElement<T>>
 
-export class LRUCache<V, K extends string> {
+export class LRUCache<T> {
     private _max: number
     private _ttl: number
-    private _cache: CacheMap<V> = {}
-    private _oldCache: CacheMap<V> = {}
+    private _cache: CacheMap<T> = {}
+    private _oldCache: CacheMap<T> = {}
     private _size = 0
 
     constructor ({ max = Infinity, ttl = Infinity } = {}) {
@@ -13,7 +13,7 @@ export class LRUCache<V, K extends string> {
         this._ttl = ttl
     }
 
-    has (key: K) {
+    has (key: string) {
         if (hasOwn(this._cache, key)) {
             const el = this._cache[key]
             if (el.expire <= Date.now()) {
@@ -34,7 +34,7 @@ export class LRUCache<V, K extends string> {
         return false
     }
 
-    set (key: K, val: V, { ttl = this._ttl } = {}) {
+    set (key: string, val: T, { ttl = this._ttl } = {}) {
         const el = { val, ttl, expire: Date.now() + ttl }
         if (hasOwn(this._cache, key)) {
             this._cache[key] = el
@@ -43,7 +43,7 @@ export class LRUCache<V, K extends string> {
         }
     }
 
-    private _set (key: string, el: CacheElement<V>) {
+    private _set (key: string, el: CacheElement<T>) {
         this._cache[key] = el
         this._size++
         if (this._size >= this._max) {
@@ -53,7 +53,7 @@ export class LRUCache<V, K extends string> {
         }
     }
 
-    get (key: K) {
+    get (key: string) {
         if (hasOwn(this._cache, key)) {
             const el = this._cache[key]
             const now = Date.now()
@@ -77,7 +77,7 @@ export class LRUCache<V, K extends string> {
         }
     }
 
-    delete (key: K) {
+    delete (key: string) {
         if (hasOwn(this._cache, key)) this._size--
         delete this._cache[key]
         delete this._oldCache[key]
