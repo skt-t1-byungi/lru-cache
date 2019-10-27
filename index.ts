@@ -14,18 +14,18 @@ export class LRUCache<V, K extends string> {
     }
 
     has (key: K) {
-        const now = Date.now()
         if (hasOwn(this._cache, key)) {
             const el = this._cache[key]
-            if (el.expire > now) {
+            if (el.expire <= Date.now()) {
                 delete this._cache[key]
+                this._size--
                 return false
             }
             return true
         }
         if (hasOwn(this._oldCache, key)) {
             const el = this._oldCache[key]
-            if (el.expire > now) {
+            if (el.expire <= Date.now()) {
                 delete this._oldCache[key]
                 return false
             }
@@ -43,7 +43,7 @@ export class LRUCache<V, K extends string> {
         }
     }
 
-    private _set (key: K, el: CacheElement<V>) {
+    private _set (key: string, el: CacheElement<V>) {
         this._cache[key] = el
         this._size++
         if (this._size >= this._max) {
@@ -57,20 +57,17 @@ export class LRUCache<V, K extends string> {
         if (hasOwn(this._cache, key)) {
             const el = this._cache[key]
             const now = Date.now()
-            if (el.expire > Date.now()) {
+            if (el.expire > now) {
                 el.expire = now + el.ttl
                 return el.val
             }
-
             delete this._cache[key]
             this._size--
             return
         }
-
         if (hasOwn(this._oldCache, key)) {
             const el = this._oldCache[key]
             delete this._oldCache[key]
-
             const now = Date.now()
             if (el.expire > now) {
                 el.expire = now + el.ttl
