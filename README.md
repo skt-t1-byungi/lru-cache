@@ -6,7 +6,7 @@ Added [ttl](https://en.wikipedia.org/wiki/Time_to_live) and old browser support.
 
 
 [![npm](https://flat.badgen.net/npm/v/@byungi/lru-cache)](https://www.npmjs.com/package/@byungi/lru-cache)
-[![license](https://flat.badgen.net/github/license/skt-t1-byungi/@byungi/lru-cache)](https://github.com/skt-t1-byungi/@byungi/lru-cache/blob/master/LICENSE)
+[![license](https://flat.badgen.net/github/license/skt-t1-byungi/lru-cache)](https://github.com/skt-t1-byungi/lru-cache/blob/master/LICENSE)
 
 ## Install
 ```sh
