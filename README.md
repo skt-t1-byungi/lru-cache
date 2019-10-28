@@ -29,6 +29,7 @@ console.log(cache.has('a')) // => false
 
 console.log(cache.has('d')) // => true
 setTimeout(()=> {
+    // After ttl(100ms).
     console.log(cache.has('d')) // => false
 }, 100)
 ```
