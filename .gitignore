@@ -1,3 +1,5 @@
 node_modules/
 *.lock
 *.log
+index.js
+index.d.ts
