@@ -11,6 +11,12 @@
         "index.js",
         "index.d.ts"
     ],
+    "keywords": [
+        "lru",
+        "cache",
+        "ttl",
+        "time to live"
+    ],
     "scripts": {
         "test": "npm run clean && ava",
         "clean": "rm -f *.js *.d.ts",
