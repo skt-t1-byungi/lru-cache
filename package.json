@@ -1,7 +1,7 @@
 {
     "name": "@byungi/lru-cache",
     "description": "Typed fast LRU cache for browser.",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "author": "skt-t1-byungi <tiniwz@gmail.com>",
     "repository": "https://github.com/skt-t1-byungi/lru-cache.git",
     "main": "index.js",
