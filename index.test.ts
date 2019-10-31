@@ -58,19 +58,12 @@ test('ttl', async t => {
     t.true(cache.has('b'))
 })
 
-test('renewTTL is `false`', async t => {
+test('renewTTL', async t => {
     const cache = new LRUCache<number>({ max: 2, ttl: 100, renewTTL: false })
     cache.set('a', 1)
     t.true(cache.has('a'))
     await pDelay(50)
-    t.true(cache.has('a'))
+    cache.get('a') // => not renew
     await pDelay(50)
     t.false(cache.has('a'))
-
-    cache.set('b', 1)
-    t.true(cache.has('b'))
-    await pDelay(50)
-    cache.get('b') // => not renew
-    await pDelay(50)
-    t.false(cache.has('b'))
 })
