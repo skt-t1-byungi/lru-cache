@@ -1,16 +1,18 @@
-type CacheElement<T> = {val: T; expire: number; ttl: number}
+type CacheElement<T> = {val: T; expire: number}
 type CacheMap<T> = Record<string, CacheElement<T>>
 
 export class LRUCache<T> {
     private _max: number
     private _ttl: number
+    private _renewTTL: boolean
     private _cache: CacheMap<T> = {}
     private _oldCache: CacheMap<T> = {}
     private _size = 0
 
-    constructor ({ max = Infinity, ttl = Infinity } = {}) {
+    constructor ({ max = Infinity, ttl = Infinity, renewTTL = true } = {}) {
         this._max = max
         this._ttl = ttl
+        this._renewTTL = renewTTL
     }
 
     has (key: string) {
@@ -34,8 +36,8 @@ export class LRUCache<T> {
         return false
     }
 
-    set (key: string, val: T, { ttl = this._ttl } = {}) {
-        const el = { val, ttl, expire: Date.now() + ttl }
+    set (key: string, val: T) {
+        const el = { val, expire: Date.now() + this._ttl }
         if (hasOwn(this._cache, key)) {
             this._cache[key] = el
         } else {
@@ -58,7 +60,7 @@ export class LRUCache<T> {
             const el = this._cache[key]
             const now = Date.now()
             if (el.expire > now) {
-                el.expire = now + el.ttl
+                if (this._renewTTL) el.expire = now + this._ttl
                 return el.val
             }
             delete this._cache[key]
@@ -70,7 +72,7 @@ export class LRUCache<T> {
             delete this._oldCache[key]
             const now = Date.now()
             if (el.expire > now) {
-                el.expire = now + el.ttl
+                if (this._renewTTL) el.expire = now + this._ttl
                 this._set(key, el)
                 return el.val
             }
