@@ -40,13 +40,11 @@ Create an instance.
 
 #### options
 - `max` - Maximum cache size. (Default: `Infinity`)
-- `ttl` - Default `ttl` when calling a `cache.set()`. (Default: `Infinity`)
+- `ttl` - Time to live. (Default: `Infinity`)
+- `renewTTL` - If `true`, renew token when getting value. (Default: `true`)
 
-### cache.set(key, value, options?)
+### cache.set(key, value)
 Set value by key.
-
-#### options
-- `ttl` - Time to live.
 
 ### cache.get(key)
 Get value by key.
